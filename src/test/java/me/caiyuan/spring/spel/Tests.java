@@ -113,4 +113,18 @@ public class Tests {
         log.info(o);
     }
 
+    @Test
+    void t12() {
+        ExpressionParser parser = new SpelExpressionParser();
+
+        int[] numbers1 = (int[]) parser.parseExpression("new int[4]").getValue();
+        log.info(numbers1);
+
+        int[] numbers2 = (int[]) parser.parseExpression("new int[]{1,2,3}").getValue();
+        log.info(numbers2);
+
+        int[][] numbers3 = (int[][]) parser.parseExpression("new int[4][5]").getValue();
+        log.info(numbers3);
+    }
+
 }
