@@ -3,14 +3,13 @@ package me.caiyuan.spring.spel;
 import lombok.extern.log4j.Log4j2;
 import me.caiyuan.spring.spel.pojo.Inventor;
 import org.junit.jupiter.api.Test;
+import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.SimpleEvaluationContext;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Log4j2
 public class Tests {
@@ -118,13 +117,77 @@ public class Tests {
         ExpressionParser parser = new SpelExpressionParser();
 
         int[] numbers1 = (int[]) parser.parseExpression("new int[4]").getValue();
-        log.info(numbers1);
+        log.info(Arrays.toString(numbers1));
 
         int[] numbers2 = (int[]) parser.parseExpression("new int[]{1,2,3}").getValue();
-        log.info(numbers2);
+        log.info(Arrays.toString(numbers2));
 
         int[][] numbers3 = (int[][]) parser.parseExpression("new int[4][5]").getValue();
-        log.info(numbers3);
+        log.info(Arrays.toString(numbers3));
+    }
+
+    @Test
+    void t13() {
+        ExpressionParser parser = new SpelExpressionParser();
+        Expression expression = parser.parseExpression("'abc'.substring(1, 3)");
+        String o = expression.getValue(String.class);
+        log.info(o);
+    }
+
+    @Test
+    void t14() {
+        ExpressionParser parser = new SpelExpressionParser();
+
+        boolean trueValue1 = parser.parseExpression("2 == 2").getValue(Boolean.class);
+        log.info(trueValue1);
+
+        boolean falseValue = parser.parseExpression("2 < -5.0").getValue(Boolean.class);
+        log.info(falseValue);
+
+        boolean trueValue2 = parser.parseExpression("'black' < 'block'").getValue(Boolean.class);
+        log.info(trueValue2);
+    }
+
+    @Test
+    void t15() {
+        ExpressionParser parser = new SpelExpressionParser();
+
+        boolean falseValue1 = parser.parseExpression("'xyz' instanceof T(Integer)").getValue(Boolean.class);
+        log.info(falseValue1);
+
+        boolean trueValue = parser.parseExpression("'5.00' matches '^-?\\d+(\\.\\d{2})?$'").getValue(Boolean.class);
+        log.info(trueValue);
+
+        boolean falseValue2 = parser.parseExpression("'5.0067' matches '^-?\\d+(\\.\\d{2})?$'").getValue(Boolean.class);
+        log.info(falseValue2);
+    }
+
+    @Test
+    void t16() {
+        ExpressionParser parser = new SpelExpressionParser();
+
+        boolean falseValue1 = parser.parseExpression("true and false").getValue(Boolean.class);
+        log.info(falseValue1);
+
+        boolean trueValue = parser.parseExpression("true or false").getValue(Boolean.class);
+        log.info(trueValue);
+
+        boolean falseValue2 = parser.parseExpression("!true").getValue(Boolean.class);
+        log.info(falseValue1);
+    }
+
+    @Test
+    void t17() {
+        List<Integer> primes = new ArrayList<>(Arrays.asList(2, 3, 5, 7, 11, 13, 17));
+
+        ExpressionParser parser = new SpelExpressionParser();
+
+        EvaluationContext context = SimpleEvaluationContext.forReadOnlyDataBinding().build();
+        context.setVariable("primes", primes);
+
+        // The #this and #root Variables
+        List<Integer> primesGreaterThanTen = (List<Integer>) parser.parseExpression("#primes.?[#this>10]").getValue(context);
+        log.info(primesGreaterThanTen);
     }
 
 }
