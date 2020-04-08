@@ -198,4 +198,16 @@ public class Tests {
         log.info(falseString);
     }
 
+    @Test
+    void t19() {
+        String name = "Elvis Presley";
+        String displayName = (name != null ? name : "Unknown");
+        log.info(displayName);
+
+        ExpressionParser parser = new SpelExpressionParser();
+        Expression expression = parser.parseExpression("name?:'Unknown'");
+        String n = expression.getValue(String.class);
+        log.info(n);// 'Unknown'
+    }
+
 }
