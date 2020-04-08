@@ -202,7 +202,7 @@ public class Tests {
     void t19() {
         GregorianCalendar c = new GregorianCalendar();
         c.set(1856, Calendar.AUGUST, 9);
-        Inventor tesla = new Inventor("Nikola Tesla", c.getTime(), "Serbian");
+        Inventor tesla = new Inventor(null, c.getTime(), "Serbian");
 
         ExpressionParser parser = new SpelExpressionParser();
         Expression expression = parser.parseExpression("name?:'Unknown'");
