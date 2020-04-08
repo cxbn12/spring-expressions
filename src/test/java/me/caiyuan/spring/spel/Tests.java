@@ -200,17 +200,13 @@ public class Tests {
 
     @Test
     void t19() {
-        GregorianCalendar c = new GregorianCalendar();
-        c.set(1856, Calendar.AUGUST, 9);
-        Inventor tesla = new Inventor(null, c.getTime(), "Serbian");
-
         ExpressionParser parser = new SpelExpressionParser();
         Expression expression = parser.parseExpression("name?:'Unknown'");
 
-        String n = expression.getValue(tesla, String.class);
+        String n = expression.getValue(new Inventor(), String.class);
         log.info(n);// 'Unknown'
 
-        String name = "Elvis Presley";
+        String name = null;
         String displayName = (name != null ? name : "Unknown");
         log.info(displayName);
     }
