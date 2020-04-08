@@ -9,6 +9,8 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Map;
 
 @Log4j2
 public class Tests {
@@ -78,4 +80,37 @@ public class Tests {
         Object o = exp.getValue();
         log.info(o);
     }
+
+    @Test
+    void t8() {
+        ExpressionParser parser = new SpelExpressionParser();
+        Expression exp = parser.parseExpression("{1,2,3}");
+        List<Integer> o = exp.getValue(List.class);
+        log.info(o);
+    }
+
+    @Test
+    void t9() {
+        ExpressionParser parser = new SpelExpressionParser();
+        Expression exp = parser.parseExpression("{{'a','b'},{'x','y'}}");
+        List<List<String>> o = exp.getValue(List.class);
+        log.info(o);
+    }
+
+    @Test
+    void t10() {
+        ExpressionParser parser = new SpelExpressionParser();
+        Expression exp = parser.parseExpression("{name:'Nikola',dob:'10-July-1856'}");
+        Map<String, String> o = exp.getValue(Map.class);
+        log.info(o);
+    }
+
+    @Test
+    void t11() {
+        ExpressionParser parser = new SpelExpressionParser();
+        Expression exp = parser.parseExpression("{name:{first:'Nikola',last:'Tesla'},dob:{day:10,month:'July',year:1856}}");
+        Map<String, Map<String, String>> o = exp.getValue(Map.class);
+        log.info(o);
+    }
+
 }
