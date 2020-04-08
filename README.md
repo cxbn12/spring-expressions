@@ -1,4 +1,7 @@
-[Spring Expression Language (SpEL)](https://docs.spring.io/spring/docs/5.2.5.RELEASE/spring-framework-reference/core.html#expressions)
+Spring Expression Language (SpEL)
 ===
 
-### [Language Reference](https://docs.spring.io/spring/docs/5.2.5.RELEASE/spring-framework-reference/core.html#expressions-language-ref)
+* [Evaluation](core-expressions.adoc#expressions-evaluation)
+* [Expressions in Bean Definitions](core-expressions.adoc#expressions-beandef)
+* [Language Reference](core-expressions.adoc#expressions-language-ref)
+* [Classes Used in the Examples](core-expressions.adoc#expressions-example-classes)
