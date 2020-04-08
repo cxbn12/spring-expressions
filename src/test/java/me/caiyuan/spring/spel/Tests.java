@@ -211,4 +211,17 @@ public class Tests {
         log.info(displayName);
     }
 
+    @Test
+    void t20() {
+        ExpressionParser parser = new SpelExpressionParser();
+        Expression expression = parser.parseExpression("name?.toUpperCase()");
+
+        String n = expression.getValue(new Inventor("Nikola Tesla", null, null), String.class);
+        log.info(n);
+
+        String name = "Nikola Tesla";
+        String displayName = (name != null ? name.toUpperCase() : null);
+        log.info(displayName);
+    }
+
 }
