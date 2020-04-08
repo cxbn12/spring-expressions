@@ -173,7 +173,7 @@ public class Tests {
         log.info(trueValue);
 
         boolean falseValue2 = parser.parseExpression("!true").getValue(Boolean.class);
-        log.info(falseValue1);
+        log.info(falseValue2);
     }
 
     @Test
@@ -200,14 +200,19 @@ public class Tests {
 
     @Test
     void t19() {
-        String name = "Elvis Presley";
-        String displayName = (name != null ? name : "Unknown");
-        log.info(displayName);
+        GregorianCalendar c = new GregorianCalendar();
+        c.set(1856, Calendar.AUGUST, 9);
+        Inventor tesla = new Inventor("Nikola Tesla", c.getTime(), "Serbian");
 
         ExpressionParser parser = new SpelExpressionParser();
         Expression expression = parser.parseExpression("name?:'Unknown'");
-        String n = expression.getValue(String.class);
+
+        String n = expression.getValue(tesla, String.class);
         log.info(n);// 'Unknown'
+
+        String name = "Elvis Presley";
+        String displayName = (name != null ? name : "Unknown");
+        log.info(displayName);
     }
 
 }
