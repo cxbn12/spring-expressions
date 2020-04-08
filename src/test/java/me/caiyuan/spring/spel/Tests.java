@@ -190,4 +190,12 @@ public class Tests {
         log.info(primesGreaterThanTen);
     }
 
+    @Test
+    void t18() {
+        ExpressionParser parser = new SpelExpressionParser();
+        Expression expression = parser.parseExpression("false ? 'trueExp' : 'falseExp'");
+        String falseString = expression.getValue(String.class);
+        log.info(falseString);
+    }
+
 }
