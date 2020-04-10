@@ -1,7 +1,6 @@
 package me.caiyuan.spring.spel;
 
 import lombok.extern.log4j.Log4j2;
-import me.caiyuan.spring.spel.pojo.Inventor;
 import org.junit.jupiter.api.Test;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
@@ -9,7 +8,10 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.SimpleEvaluationContext;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 @Log4j2
 public class Tests {
@@ -49,16 +51,14 @@ public class Tests {
     @Test
     void t5() {
         ExpressionParser parser = new SpelExpressionParser();
-        Expression exp = parser.parseExpression("new String('hello world').toUpperCase()");
-        String message = exp.getValue(String.class);
-        log.info(message);
+        Expression expression = parser.parseExpression("'abc'.substring(1, 3)");
+        String o = expression.getValue(String.class);
+        log.info(o);
     }
 
     @Test
     void t6() {
-        GregorianCalendar c = new GregorianCalendar();
-        c.set(1856, Calendar.AUGUST, 9);
-        Inventor tesla = new Inventor("Nikola Tesla", c.getTime(), "Serbian");
+        Inventor tesla = new Inventor("Nikola Tesla");
 
         ExpressionParser parser = new SpelExpressionParser();
         Expression exp;
@@ -75,13 +75,35 @@ public class Tests {
     @Test
     void t7() {
         ExpressionParser parser = new SpelExpressionParser();
+        Expression exp = parser.parseExpression("new String('hello world').toUpperCase()");
+        String message = exp.getValue(String.class);
+        log.info(message);
+    }
+
+    @Test
+    void t8() {
+        ExpressionParser parser = new SpelExpressionParser();
         Expression exp = parser.parseExpression("T(java.lang.Math).random() * 100.0");
         Object o = exp.getValue();
         log.info(o);
     }
 
     @Test
-    void t8() {
+    void t9() {
+        ExpressionParser parser = new SpelExpressionParser();
+
+        boolean falseValue1 = parser.parseExpression("'xyz' instanceof T(Integer)").getValue(Boolean.class);
+        log.info(falseValue1);
+
+        boolean trueValue = parser.parseExpression("'5.00' matches '^-?\\d+(\\.\\d{2})?$'").getValue(Boolean.class);
+        log.info(trueValue);
+
+        boolean falseValue2 = parser.parseExpression("'5.0067' matches '^-?\\d+(\\.\\d{2})?$'").getValue(Boolean.class);
+        log.info(falseValue2);
+    }
+
+    @Test
+    void t10() {
         ExpressionParser parser = new SpelExpressionParser();
         Expression exp = parser.parseExpression("{1,2,3}");
         List<Integer> o = exp.getValue(List.class);
@@ -89,7 +111,7 @@ public class Tests {
     }
 
     @Test
-    void t9() {
+    void t11() {
         ExpressionParser parser = new SpelExpressionParser();
         Expression exp = parser.parseExpression("{{'a','b'},{'x','y'}}");
         List<List<String>> o = exp.getValue(List.class);
@@ -97,7 +119,7 @@ public class Tests {
     }
 
     @Test
-    void t10() {
+    void t12() {
         ExpressionParser parser = new SpelExpressionParser();
         Expression exp = parser.parseExpression("{name:'Nikola',dob:'10-July-1856'}");
         Map<String, String> o = exp.getValue(Map.class);
@@ -105,7 +127,7 @@ public class Tests {
     }
 
     @Test
-    void t11() {
+    void t13() {
         ExpressionParser parser = new SpelExpressionParser();
         Expression exp = parser.parseExpression("{name:{first:'Nikola',last:'Tesla'},dob:{day:10,month:'July',year:1856}}");
         Map<String, Map<String, String>> o = exp.getValue(Map.class);
@@ -113,7 +135,7 @@ public class Tests {
     }
 
     @Test
-    void t12() {
+    void t14() {
         ExpressionParser parser = new SpelExpressionParser();
 
         int[] numbers1 = (int[]) parser.parseExpression("new int[4]").getValue();
@@ -127,15 +149,7 @@ public class Tests {
     }
 
     @Test
-    void t13() {
-        ExpressionParser parser = new SpelExpressionParser();
-        Expression expression = parser.parseExpression("'abc'.substring(1, 3)");
-        String o = expression.getValue(String.class);
-        log.info(o);
-    }
-
-    @Test
-    void t14() {
+    void t15() {
         ExpressionParser parser = new SpelExpressionParser();
 
         boolean trueValue1 = parser.parseExpression("2 == 2").getValue(Boolean.class);
@@ -146,20 +160,6 @@ public class Tests {
 
         boolean trueValue2 = parser.parseExpression("'black' < 'block'").getValue(Boolean.class);
         log.info(trueValue2);
-    }
-
-    @Test
-    void t15() {
-        ExpressionParser parser = new SpelExpressionParser();
-
-        boolean falseValue1 = parser.parseExpression("'xyz' instanceof T(Integer)").getValue(Boolean.class);
-        log.info(falseValue1);
-
-        boolean trueValue = parser.parseExpression("'5.00' matches '^-?\\d+(\\.\\d{2})?$'").getValue(Boolean.class);
-        log.info(trueValue);
-
-        boolean falseValue2 = parser.parseExpression("'5.0067' matches '^-?\\d+(\\.\\d{2})?$'").getValue(Boolean.class);
-        log.info(falseValue2);
     }
 
     @Test
@@ -178,20 +178,6 @@ public class Tests {
 
     @Test
     void t17() {
-        List<Integer> primes = new ArrayList<>(Arrays.asList(2, 3, 5, 7, 11, 13, 17));
-
-        ExpressionParser parser = new SpelExpressionParser();
-
-        EvaluationContext context = SimpleEvaluationContext.forReadOnlyDataBinding().build();
-        context.setVariable("primes", primes);
-
-        // The #this and #root Variables
-        List<Integer> primesGreaterThanTen = (List<Integer>) parser.parseExpression("#primes.?[#this>10]").getValue(context);
-        log.info(primesGreaterThanTen);
-    }
-
-    @Test
-    void t18() {
         ExpressionParser parser = new SpelExpressionParser();
         Expression expression = parser.parseExpression("false ? 'trueExp' : 'falseExp'");
         String falseString = expression.getValue(String.class);
@@ -199,7 +185,7 @@ public class Tests {
     }
 
     @Test
-    void t19() {
+    void t18() {
         ExpressionParser parser = new SpelExpressionParser();
         Expression expression = parser.parseExpression("name?:'Unknown'");
 
@@ -212,11 +198,11 @@ public class Tests {
     }
 
     @Test
-    void t20() {
+    void t19() {
         ExpressionParser parser = new SpelExpressionParser();
         Expression expression = parser.parseExpression("name?.toUpperCase()");
 
-        String n = expression.getValue(new Inventor("Nikola Tesla", null, null), String.class);
+        String n = expression.getValue(new Inventor("Nikola Tesla"), String.class);
         log.info(n);
 
         String name = "Nikola Tesla";
@@ -224,4 +210,38 @@ public class Tests {
         log.info(displayName);
     }
 
+    @Test
+    void t20() {
+        List<Integer> primes = new ArrayList<>(Arrays.asList(2, 3, 5, 7, 11, 13, 17));
+
+        ExpressionParser parser = new SpelExpressionParser();
+
+        EvaluationContext context = SimpleEvaluationContext.forReadOnlyDataBinding().build();
+        context.setVariable("primes", primes);
+
+        // The #this and #root Variables
+        List<Integer> primesGreaterThanTen = (List<Integer>) parser.parseExpression("#primes.?[#this>10]").getValue(context);
+        log.info(primesGreaterThanTen);
+    }
+
+}
+
+class Inventor {
+
+    private String name;
+
+    public Inventor(String name) {
+        this.name = name;
+    }
+
+    public Inventor() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
